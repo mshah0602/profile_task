@@ -10,11 +10,13 @@ import LoginScreen from "./Screens/LoginScreen";
 import { Ionicons } from '@expo/vector-icons';
 import { useFonts, Raleway_700Bold } from "@expo-google-fonts/raleway";
 import { Italianno_400Regular } from "@expo-google-fonts/italianno";
+import { UserProvider } from "./Context/Context";
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 function MainTabs() {
   return (
-      <Tab.Navigator
+    <Tab.Navigator
       screenOptions={({route}) => ({
         tabBarIcon: ({color,size}) => {
           let iconName;
@@ -25,13 +27,12 @@ function MainTabs() {
           } else if(route.name==='Edit Profile'){
             iconName='create';
           }
-
           return <Ionicons name={iconName} size={size} color={color}/>
         },
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.tabLabel,
-      
-    })}
+        headerShown: false,
+      })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
@@ -40,27 +41,35 @@ function MainTabs() {
   );
 }
 export default function App(){
-      const [fontsLoaded] = useFonts({
+  const [fontsLoaded] = useFonts({
     RalewayBold: Raleway_700Bold,
     ItaliannoRegular: Italianno_400Regular,
   });
+  
   if (!fontsLoaded) {
     return (
-      <View>
+      <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#2a240cff" />
       </View>
     );
   }
-    return (
-    <NavigationContainer>
-        <Stack.Navigator initialRouteName="HomeScreen">
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
-        <Stack.Screen name="Signup" component={SignupScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="MainTabs" component={MainTabs} />
+  
+  return (
+    <UserProvider>
+      <NavigationContainer>
+        <Stack.Navigator 
+          initialRouteName="Signup"
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="Signup" component={SignupScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="MainTabs" component={MainTabs} />
         </Stack.Navigator>
-    </NavigationContainer>
-    );
+      </NavigationContainer>
+    </UserProvider>
+  );
 }
 const styles=StyleSheet.create({
   tabBar:{
@@ -68,11 +77,15 @@ const styles=StyleSheet.create({
     height:60,
     borderTopColor:"#000000ff",
     borderTopWidth:0.6,
-
   },
   tabLabel:{
     fontSize:10,
     fontWeight:"800",
   },
-  
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+  },
 });

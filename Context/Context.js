@@ -13,3 +13,4 @@ export const UserProvider= ({children}) => { //created provider
     );
     
 }
+export {userContext};

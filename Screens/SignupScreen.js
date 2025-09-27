@@ -16,7 +16,7 @@ export default function SignupScreen({navigation}){
                   const pickImage = async () => {
                   
                   let result = await ImagePicker.launchImageLibraryAsync({
-                    mediaTypes: ['images', 'videos'],
+                    mediaTypes: ImagePicker.MediaTypeOptions.Images,
                     allowsEditing: true,
                     aspect: [4, 3],
                     quality: 1,
